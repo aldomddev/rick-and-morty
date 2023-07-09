@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.paging.compose)
+    // Image
+    implementation(libs.coil.kt)
+    implementation(libs.coil.kt.compose)
     // Http
     implementation(libs.retrofit.core)
     implementation(libs.okhttp.logging)
@@ -73,6 +76,7 @@ dependencies {
     implementation(libs.retrofit.kotlin.serialization)
     // DI
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
     // Room
     implementation(libs.room.runtime)
