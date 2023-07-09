@@ -47,7 +47,7 @@ class CharactersRemoteMediator(
             }
 
             MediatorResult.Success(
-                endOfPaginationReached = remotePageData.info.next != null
+                endOfPaginationReached = remotePageData.info.next == null
             )
         } catch (error: Exception) {
             MediatorResult.Error(error)
