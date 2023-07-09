@@ -7,8 +7,8 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
-import br.com.amd.rickandmorty.data.local.model.toCharactersEntity
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
+import br.com.amd.rickandmorty.data.remote.model.toCharactersEntity
 
 @ExperimentalPagingApi
 class CharactersRemoteMediator(
