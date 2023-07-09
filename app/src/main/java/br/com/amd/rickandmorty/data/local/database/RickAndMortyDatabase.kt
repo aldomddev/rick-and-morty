@@ -2,7 +2,7 @@ package br.com.amd.rickandmorty.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import br.com.amd.rickandmorty.data.local.CharactersDao
+import br.com.amd.rickandmorty.data.local.database.dao.CharactersDao
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 
 @Database(

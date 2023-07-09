@@ -56,6 +56,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.paging)
     //implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     // Compose
     implementation(platform(libs.androidx.compose.bom))
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.paging.compose)
     // Http
     implementation(libs.retrofit.core)
     implementation(libs.okhttp.logging)
@@ -75,6 +77,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.room.paging)
     kapt(libs.room.compiler)
     //Tests
     testImplementation(libs.junit4)
