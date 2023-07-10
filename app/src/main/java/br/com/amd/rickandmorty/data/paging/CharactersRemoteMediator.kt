@@ -1,4 +1,4 @@
-package br.com.amd.rickandmorty.data.remote.paging
+package br.com.amd.rickandmorty.data.paging
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType

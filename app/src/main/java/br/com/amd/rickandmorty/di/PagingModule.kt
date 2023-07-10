@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
-import br.com.amd.rickandmorty.data.remote.paging.CharactersRemoteMediator
+import br.com.amd.rickandmorty.data.paging.CharactersRemoteMediator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
