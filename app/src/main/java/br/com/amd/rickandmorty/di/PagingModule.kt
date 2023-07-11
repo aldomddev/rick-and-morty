@@ -7,6 +7,7 @@ import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.paging.CharactersRemoteMediator
+import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi.Companion.PAGE_SIZE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +26,7 @@ object PagingModule {
         api: RickAndMortyApi
     ): Pager<Int, CharacterEntity> {
         return Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = CharactersRemoteMediator(
                 rickAndMortyDb = database,
                 rickAndMortyApi = api

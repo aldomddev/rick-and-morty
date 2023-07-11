@@ -1,7 +1,8 @@
-package br.com.amd.rickandmorty.ui.screen
+package br.com.amd.rickandmorty.presentation.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,9 @@ import coil.compose.AsyncImage
 
 @Composable
 fun CharacterListScreen(
-    characters: LazyPagingItems<Character>
+    characters: LazyPagingItems<Character>,
+    modifier: Modifier = Modifier,
+    navigateToDetails: (id: Int) -> Unit
 ) {
     val context = LocalContext.current
     LaunchedEffect(key1 = characters.loadState) {
@@ -48,7 +51,7 @@ fun CharacterListScreen(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
@@ -67,7 +70,8 @@ fun CharacterListScreen(
                     if (character != null) {
                         CharacterItem(
                             item = character,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            onItemClick = navigateToDetails
                         )
                     }
                 }
@@ -79,9 +83,10 @@ fun CharacterListScreen(
 @Composable
 fun CharacterItem(
     item: Character,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: (id: Int) -> Unit
 ) {
-    Card(modifier = modifier) {
+    Card(modifier = modifier.clickable { onItemClick(item.id) }) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -112,10 +117,12 @@ fun CharacterItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val statusColor = if (item.status == "Alive") Color.Green else Color.Red
-                    Box(modifier = Modifier
-                        .size(8.dp)
-                        .clip(shape = CircleShape)
-                        .background(statusColor))
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(shape = CircleShape)
+                            .background(statusColor)
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         modifier = modifier.fillMaxWidth(),
@@ -166,7 +173,8 @@ fun CharacterItemPreview() {
                 origin = "Earth (C-137)",
                 location = "Citadel of Ricks",
                 image = "https://rickandmortyapi.com/api/location/1"
-            )
+            ),
+            onItemClick = {}
         )
     }
 }

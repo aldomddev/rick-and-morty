@@ -9,6 +9,8 @@ import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.remote.model.toCharactersEntity
+import retrofit2.HttpException
+import java.io.IOException
 
 @ExperimentalPagingApi
 class CharactersRemoteMediator(
@@ -26,7 +28,6 @@ class CharactersRemoteMediator(
                 LoadType.PREPEND -> {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
-
                 LoadType.APPEND -> {
                     when (val lastItem = state.lastItemOrNull()) {
                         null -> RickAndMortyApi.DEFAULT_FIRST_PAGE
@@ -49,8 +50,10 @@ class CharactersRemoteMediator(
             MediatorResult.Success(
                 endOfPaginationReached = remotePageData.info.next == null
             )
-        } catch (error: Exception) {
-            MediatorResult.Error(error)
+        } catch (exception: IOException) {
+            return MediatorResult.Error(exception)
+        } catch (exception: HttpException) {
+            return MediatorResult.Error(exception)
         }
     }
 }

@@ -1,7 +1,9 @@
 package br.com.amd.rickandmorty.di
 
 import br.com.amd.rickandmorty.BuildConfig
+import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
+import br.com.amd.rickandmorty.data.repository.RickAndMortyRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -48,4 +50,11 @@ object ServiceModule {
 
         return retrofit.create(RickAndMortyApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideRickAndMortyRepository(
+        database: RickAndMortyDatabase,
+        api: RickAndMortyApi
+    ) = RickAndMortyRepository(api, database)
 }

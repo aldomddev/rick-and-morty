@@ -1,6 +1,7 @@
 package br.com.amd.rickandmorty.data.remote.model
 
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
+import br.com.amd.rickandmorty.domain.model.Character
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -37,3 +38,14 @@ fun CharacterResponse.toCharacterEntity() = CharacterEntity(
 )
 
 fun List<CharacterResponse>.toCharactersEntity() = map { it.toCharacterEntity() }
+
+fun CharacterResponse.toCharacter() = Character(
+    id = id,
+    name = name,
+    status = status,
+    species = species,
+    gender = gender,
+    origin = origin.name,
+    location = location.name,
+    image = image
+)
