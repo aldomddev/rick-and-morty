@@ -6,10 +6,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
+import br.com.amd.rickandmorty.data.local.model.toCharacter
 import br.com.amd.rickandmorty.data.paging.CharactersRemoteMediator
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi.Companion.PAGE_SIZE
-import br.com.amd.rickandmorty.data.remote.model.toCharacter
 import br.com.amd.rickandmorty.domain.model.Character
 import kotlinx.coroutines.flow.Flow
 
@@ -19,7 +19,7 @@ class RickAndMortyRepository(
 ) {
     suspend fun getCharacterDetails(id: Int): Result<Character> {
         return runCatching {
-            rickAndMortyApi.getCharacterDetails(id).toCharacter()
+            rickAndMortyDb.getCharactersDao().charById(id).toCharacter()
         }
     }
 
