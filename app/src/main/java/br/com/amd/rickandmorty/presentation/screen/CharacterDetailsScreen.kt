@@ -1,5 +1,6 @@
 package br.com.amd.rickandmorty.presentation.screen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import br.com.amd.rickandmorty.domain.model.Character
 import coil.compose.AsyncImage
@@ -45,49 +48,130 @@ fun CharacterDetailsScreen(
             .padding(8.dp)
     ) {
         when (uiState) {
-            CharacterDetailsUiState.Error -> ErrorState()
             CharacterDetailsUiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
             is CharacterDetailsUiState.Success -> SuccessState(character = uiState.data)
+            CharacterDetailsUiState.Error -> ErrorState()
         }
     }
 }
 
 @Composable
-private fun SuccessState(character: Character) {
-    Row(
+private fun SuccessState(
+    character: Character
+) {
+    val configuration = LocalConfiguration.current
+
+    if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        PortraitDetailsContent(character = character)
+    } else {
+        LandscapeDetailsContent(item = character)
+    }
+}
+
+@Composable
+private fun PortraitDetailsContent(character: Character) {
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Max)
-            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AsyncImage(
             model = character.image,
             contentDescription = character.name,
             modifier = Modifier
-                .weight(2f)
-                .height(150.dp)
+                .height(200.dp)
+                .clip(RoundedCornerShape(size = 8.dp))
+        )
+        Row(
+            modifier = Modifier
+                .padding(top = 16.dp, start = 16.dp)
+                .width(IntrinsicSize.Max)
+        ) {
+            Column {
+                Text(
+                    text = character.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val statusColor = if (character.status == "Alive") Color.Green else Color.Red
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(shape = CircleShape)
+                            .background(statusColor)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "${character.status} - ${character.species}",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "From:",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.LightGray
+                )
+                Text(
+                    text = character.origin,
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Last known location:",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = Color.LightGray
+                )
+                Text(
+                    text = character.location,
+                    style = MaterialTheme.typography.titleSmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LandscapeDetailsContent(
+    item: Character,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        AsyncImage(
+            model = item.image,
+            contentDescription = item.name,
+            modifier = Modifier
+                .height(200.dp)
+                .clip(RoundedCornerShape(size = 8.dp))
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column(
             modifier = Modifier
-                .weight(2f)
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = character.name,
+                modifier = modifier.fillMaxWidth(),
+                text = item.name,
                 style = MaterialTheme.typography.titleMedium
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val statusColor = if (character.status == "Alive") Color.Green else Color.Red
+                val statusColor = if (item.status == "Alive") Color.Green else Color.Red
                 Box(
                     modifier = Modifier
                         .size(8.dp)
@@ -96,33 +180,33 @@ private fun SuccessState(character: Character) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "${character.status} - ${character.species}",
+                    modifier = modifier.fillMaxWidth(),
+                    text = "${item.status} - ${item.species}",
                     style = MaterialTheme.typography.titleSmall
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 text = "From:",
                 style = MaterialTheme.typography.titleSmall,
                 color = Color.LightGray
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = character.origin,
+                modifier = modifier.fillMaxWidth(),
+                text = item.origin,
                 style = MaterialTheme.typography.titleSmall
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = modifier.height(8.dp))
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 text = "Last known location:",
                 style = MaterialTheme.typography.titleSmall,
                 color = Color.LightGray
             )
             Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = character.location,
+                modifier = modifier.fillMaxWidth(),
+                text = item.location,
                 style = MaterialTheme.typography.titleSmall
             )
         }
