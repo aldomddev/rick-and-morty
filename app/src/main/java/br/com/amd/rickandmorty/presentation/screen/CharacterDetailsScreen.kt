@@ -68,7 +68,7 @@ private fun SuccessState(
     if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
         PortraitDetailsContent(character = character)
     } else {
-        LandscapeDetailsContent(item = character)
+        LandscapeDetailsContent(character = character)
     }
 }
 
@@ -101,7 +101,7 @@ private fun PortraitDetailsContent(character: Character) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val statusColor = if (character.status == "Alive") Color.Green else Color.Red
+                    val statusColor = getCharacterStatusColor(character.status)
                     Box(
                         modifier = Modifier
                             .size(8.dp)
@@ -141,7 +141,7 @@ private fun PortraitDetailsContent(character: Character) {
 
 @Composable
 private fun LandscapeDetailsContent(
-    item: Character,
+    character: Character,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -150,8 +150,8 @@ private fun LandscapeDetailsContent(
             .padding(16.dp)
     ) {
         AsyncImage(
-            model = item.image,
-            contentDescription = item.name,
+            model = character.image,
+            contentDescription = character.name,
             modifier = Modifier
                 .height(200.dp)
                 .clip(RoundedCornerShape(size = 8.dp))
@@ -164,14 +164,14 @@ private fun LandscapeDetailsContent(
         ) {
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = item.name,
+                text = character.name,
                 style = MaterialTheme.typography.titleMedium
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val statusColor = if (item.status == "Alive") Color.Green else Color.Red
+                val statusColor = getCharacterStatusColor(character.status)
                 Box(
                     modifier = Modifier
                         .size(8.dp)
@@ -181,7 +181,7 @@ private fun LandscapeDetailsContent(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     modifier = modifier.fillMaxWidth(),
-                    text = "${item.status} - ${item.species}",
+                    text = "${character.status} - ${character.species}",
                     style = MaterialTheme.typography.titleSmall
                 )
             }
@@ -194,7 +194,7 @@ private fun LandscapeDetailsContent(
             )
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = item.origin,
+                text = character.origin,
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = modifier.height(8.dp))
@@ -206,10 +206,18 @@ private fun LandscapeDetailsContent(
             )
             Text(
                 modifier = modifier.fillMaxWidth(),
-                text = item.location,
+                text = character.location,
                 style = MaterialTheme.typography.titleSmall
             )
         }
+    }
+}
+
+private fun getCharacterStatusColor(status: String): Color {
+    return when (status) {
+        "Alive" -> Color.Green
+        "Dead" -> Color.Red
+        else -> Color.Gray
     }
 }
 
