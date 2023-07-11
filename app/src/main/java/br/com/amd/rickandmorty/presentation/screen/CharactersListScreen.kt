@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -75,6 +76,11 @@ fun CharacterListScreen(
                         )
                     }
                 }
+                item {
+                    if (characters.loadState.append is LoadState.Loading) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
         }
     }
@@ -86,75 +92,27 @@ fun CharacterItem(
     modifier: Modifier = Modifier,
     onItemClick: (id: Int) -> Unit
 ) {
-    Card(modifier = modifier.clickable { onItemClick(item.id) }) {
+    Card(
+        modifier = modifier.clickable { onItemClick(item.id) }
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Max)
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 model = item.image,
                 contentDescription = item.name,
                 modifier = Modifier
-                    .weight(2f)
                     .height(150.dp)
+                    .clip(RoundedCornerShape(size = 8.dp))
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Column(
-                modifier = Modifier
-                    .weight(2f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = item.name,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val statusColor = if (item.status == "Alive") Color.Green else Color.Red
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(shape = CircleShape)
-                            .background(statusColor)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        modifier = modifier.fillMaxWidth(),
-                        text = "${item.status} - ${item.species}",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
-                Spacer(modifier = modifier.height(8.dp))
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = "From:",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.LightGray
-                )
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = item.origin,
-                    style = MaterialTheme.typography.titleSmall
-                )
-                Spacer(modifier = modifier.height(8.dp))
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = "Last known location:",
-                    style = MaterialTheme.typography.titleSmall,
-                    color = Color.LightGray
-                )
-                Text(
-                    modifier = modifier.fillMaxWidth(),
-                    text = item.location,
-                    style = MaterialTheme.typography.titleSmall
-                )
-            }
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
