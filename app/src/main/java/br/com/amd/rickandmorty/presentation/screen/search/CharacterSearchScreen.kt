@@ -28,11 +28,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import br.com.amd.rickandmorty.R
 import br.com.amd.rickandmorty.domain.model.Character
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 import br.com.amd.rickandmorty.presentation.screen.list.CharacterItem
@@ -59,10 +61,11 @@ fun CharacterSearchScreen(
                 statusList = statusList,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) { status ->
-                onStatusQueryChange(status)
-            }
+                    .padding(top = 16.dp),
+                onSelected = { status ->
+                    onStatusQueryChange(status)
+                }
+            )
 
             when (charactersFiltered.loadState.refresh) {
                 is LoadState.Loading -> {
@@ -159,11 +162,19 @@ fun SearchInput(
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
         value = text,
-        onValueChange = { text = it },
+        onValueChange = { newText ->
+            text = newText
+            active = newText.isNotEmpty()
+        },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
-        placeholder = { Text("Type a character name") },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        placeholder = { Text(stringResource(id = R.string.characters_search_input_placeholder)) },
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = stringResource(id = R.string.characters_search_icon_search_description)
+            )
+        },
         trailingIcon = {
             if (active) {
                 Icon(
@@ -175,7 +186,7 @@ fun SearchInput(
                         }
                     },
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Close icon"
+                    contentDescription = stringResource(id = R.string.characters_search_icon_close_description)
                 )
             }
         }

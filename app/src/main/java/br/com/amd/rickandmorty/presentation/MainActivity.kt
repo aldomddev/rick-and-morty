@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -15,8 +16,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.amd.rickandmorty.R
 import br.com.amd.rickandmorty.presentation.navigation.Destination
@@ -29,8 +35,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController = rememberNavController()
+            val currentDestination = navController
+                .currentBackStackEntryFlow
+                .collectAsStateWithLifecycle(initialValue = null)
 
             RickAndMortyTheme {
                 Surface(
@@ -41,19 +51,19 @@ class MainActivity : ComponentActivity() {
                         topBar = {
                             TopAppBar(
                                 title = {
-                                    Text(stringResource(id = R.string.characters_list_title))
+                                    TopAppBarTitle(destination = currentDestination)
+                                },
+                                navigationIcon = {
+                                    NavigationIcon(
+                                        navController = navController,
+                                        destination = currentDestination
+                                    )
                                 },
                                 actions = {
-                                    IconButton(
-                                        onClick = {
-                                            navController.navigate(Destination.CharacterSearchScreen.fullRoute)
-                                        }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Search,
-                                            contentDescription = "Search"
-                                        )
-                                    }
+                                    SearchIcon(
+                                        navController = navController,
+                                        destination = currentDestination
+                                    )
                                 }
                             )
                         }
@@ -66,5 +76,61 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NavigationIcon(
+    navController: NavHostController,
+    destination: State<NavBackStackEntry?>
+) {
+    if (!destination.isCurrentDestination(Destination.CharacterListScreen)) {
+        IconButton(
+            onClick = {
+                navController.navigateUp()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = "Search"
+            )
+        }
+    }
+}
+
+@Composable
+private fun SearchIcon(
+    navController: NavHostController,
+    destination: State<NavBackStackEntry?>
+) {
+    if (!destination.isCurrentDestination(Destination.CharacterSearchScreen)) {
+        IconButton(
+            onClick = {
+                navController.navigate(Destination.CharacterSearchScreen.fullRoute)
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "Search"
+            )
+        }
+    }
+}
+
+@Composable
+private fun TopAppBarTitle(destination: State<NavBackStackEntry?>) {
+    Text(stringResource(id = destination.getTopBarTitle()))
+}
+
+private fun State<NavBackStackEntry?>.isCurrentDestination(destination: Destination): Boolean {
+    return this.value?.destination?.route?.contains(destination.fullRoute) == true
+}
+
+private fun State<NavBackStackEntry?>.getTopBarTitle(): Int {
+    return when (this.value?.destination?.route) {
+        Destination.CharacterListScreen.fullRoute -> R.string.characters_list_title
+        Destination.CharacterDetailsScreen.fullRoute -> R.string.characters_details_title
+        Destination.CharacterSearchScreen.fullRoute -> R.string.characters_search_title
+        else -> R.string.app_name
     }
 }
