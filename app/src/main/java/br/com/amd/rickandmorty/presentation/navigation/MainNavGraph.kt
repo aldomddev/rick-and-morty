@@ -15,6 +15,7 @@ import br.com.amd.rickandmorty.presentation.MainViewModel
 import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsScreen
 import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsViewModel
 import br.com.amd.rickandmorty.presentation.screen.CharacterListScreen
+import br.com.amd.rickandmorty.presentation.screen.CharacterSearchScreen
 
 @Composable
 fun MainNavGraph(
@@ -57,6 +58,23 @@ fun MainNavGraph(
                 uiState = uiState.value,
                 modifier = modifier,
                 onGetCharacterDetails = characterDetailsViewModel::getCharacterDetails
+            )
+        }
+
+        composable(route = Destination.CharacterSearchScreen.fullRoute) {
+            val viewModel = hiltViewModel<MainViewModel>()
+            //val items = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+            val items = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+
+            println("AMDAMDAMD - ${items.itemCount}")
+
+            CharacterSearchScreen(
+                modifier = modifier,
+                characters = items,
+                onSearch = viewModel.search,
+                navigateToDetails = { id ->
+                    navController.navigate(Destination.CharacterDetailsScreen(id))
+                }
             )
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
 import br.com.amd.rickandmorty.R
+import br.com.amd.rickandmorty.presentation.navigation.Destination
 import br.com.amd.rickandmorty.presentation.navigation.MainNavGraph
 import br.com.amd.rickandmorty.ui.theme.RickAndMortyTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,10 +44,14 @@ class MainActivity : ComponentActivity() {
                                     Text(stringResource(id = R.string.characters_list_title))
                                 },
                                 actions = {
-                                    IconButton(onClick = { /* doSomething() */ }) {
+                                    IconButton(
+                                        onClick = {
+                                            navController.navigate(Destination.CharacterSearchScreen.fullRoute)
+                                        }
+                                    ) {
                                         Icon(
                                             imageVector = Icons.Filled.Search,
-                                            contentDescription = "Localized description"
+                                            contentDescription = "Search"
                                         )
                                     }
                                 }

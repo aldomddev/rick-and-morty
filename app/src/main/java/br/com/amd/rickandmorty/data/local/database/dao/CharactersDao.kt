@@ -16,7 +16,7 @@ interface CharactersDao {
     fun pagingSource(): PagingSource<Int, CharacterEntity>
 
     @Query("SELECT * FROM characters WHERE id LIKE :id")
-    suspend fun charById(id: Int): CharacterEntity
+    suspend fun charById(id: Int): CharacterEntity?
 
     @Query(
         "SELECT * FROM characters WHERE " +

@@ -49,3 +49,5 @@ fun CharacterResponse.toCharacter() = Character(
     location = location.name,
     image = image
 )
+
+fun List<CharacterResponse>.toCharacters() = map { it.toCharacter() }
