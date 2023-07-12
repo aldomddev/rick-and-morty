@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.amd.rickandmorty.presentation.MainViewModel
+import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsScreen
 import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsViewModel
 import br.com.amd.rickandmorty.presentation.screen.CharacterListScreen
@@ -28,14 +29,15 @@ fun MainNavGraph(
         startDestination = Destination.CharacterListScreen.fullRoute
     ) {
         composable(route = Destination.CharacterListScreen.fullRoute) {
-            val items = viewModel.charactersPagingData.collectAsLazyPagingItems()
+            val items = viewModel.charactersListPagingData.collectAsLazyPagingItems()
 
             CharacterListScreen(
                 characters = items,
-                modifier = modifier
-            ) { id ->
-                navController.navigate(Destination.CharacterDetailsScreen(id))
-            }
+                modifier = modifier,
+                navigateToDetails = { id ->
+                    navController.navigate(Destination.CharacterDetailsScreen(id))
+                }
+            )
         }
 
         composable(
@@ -62,12 +64,15 @@ fun MainNavGraph(
         }
 
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
-            val items = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+            val items = viewModel.charactersSearchPagingData.collectAsLazyPagingItems()
 
+            val statusList = CharacterStatusFilter.values().toList()
             CharacterSearchScreen(
                 modifier = modifier,
-                characters = items,
-                onSearch = viewModel.search,
+                statusList = statusList,
+                charactersFiltered = items,
+                onNameQueryChange = viewModel.onNameQueryChange,
+                onStatusQueryChange = viewModel.onStatusQueryChange,
                 navigateToDetails = { id ->
                     navController.navigate(Destination.CharacterDetailsScreen(id))
                 }

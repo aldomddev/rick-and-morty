@@ -1,10 +1,13 @@
 package br.com.amd.rickandmorty.data.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
+import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 import br.com.amd.rickandmorty.data.local.model.toCharacter
+import br.com.amd.rickandmorty.data.paging.CharactersRemoteMediator
 import br.com.amd.rickandmorty.data.paging.CharactersSearchPagingSource
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi.Companion.PAGE_SIZE
@@ -20,12 +23,26 @@ class RickAndMortyRepository(
         return runCatching {
             val localChar = rickAndMortyDb.getCharactersDao().charById(id)?.toCharacter()
             if (localChar == null) {
-                val remoteChar =  rickAndMortyApi.getCharacterDetails(id).toCharacter()
+                val remoteChar = rickAndMortyApi.getCharacterDetails(id).toCharacter()
                 return Result.success(remoteChar)
             }
 
             return Result.success(localChar)
         }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun getCharactersListStream(): Flow<PagingData<CharacterEntity>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE),
+            remoteMediator = CharactersRemoteMediator(
+                rickAndMortyDb = rickAndMortyDb,
+                rickAndMortyApi = rickAndMortyApi
+            ),
+            pagingSourceFactory = {
+                rickAndMortyDb.getCharactersDao().pagingSource()
+            }
+        ).flow
     }
 
     fun getSearchCharactersResultStream(

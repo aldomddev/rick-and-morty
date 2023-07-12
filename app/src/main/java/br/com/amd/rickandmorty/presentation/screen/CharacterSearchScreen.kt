@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,72 +29,55 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import br.com.amd.rickandmorty.domain.model.Character
+import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 
 @Composable
 fun CharacterSearchScreen(
     modifier: Modifier = Modifier,
-    characters: LazyPagingItems<Character>,
-    onSearch: (String) -> Unit,
+    statusList: List<CharacterStatusFilter>,
+    charactersFiltered: LazyPagingItems<Character>,
+    onNameQueryChange: (String) -> Unit,
+    onStatusQueryChange: (CharacterStatusFilter) -> Unit,
     navigateToDetails: (id: Int) -> Unit
 ) {
-    var text by rememberSaveable { mutableStateOf("") }
-    var active by rememberSaveable { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
+            modifier = Modifier.fillMaxSize()
         ) {
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                value = text,
-                onValueChange = { text = it },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
-                placeholder = { Text("Type a character name") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                trailingIcon = {
-                    if (active) {
-                        Icon(
-                            modifier = Modifier.clickable {
-                                if (text.isNotEmpty()) {
-                                    text = ""
-                                } else {
-                                    active = false
-                                }
-                            },
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Close icon"
-                        )
-                    }
-                }
-            )
+            SearchInput(onSearch = { onNameQueryChange(it) })
+            StatusSelector(
+                statusList = statusList,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) { status ->
+                onStatusQueryChange(status)
+            }
 
-            when (characters.loadState.refresh) {
+            when (charactersFiltered.loadState.refresh) {
                 is LoadState.Loading -> {
-                    // if (characters.itemCount == 0) // nada encontrado????
-
-                    Box(
-                        modifier = modifier.fillMaxSize()
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(top = 24.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
+                    )
                 }
 
                 is LoadState.Error -> {
-                    Text(text = "Oooops!!!!")
+                    Text(
+                        modifier = Modifier.padding(top = 24.dp),
+                        text = "No matching characters found",
+                        textAlign = TextAlign.Center
+                    )
                 }
 
                 else -> {
@@ -101,8 +88,8 @@ fun CharacterSearchScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(characters.itemCount) { itemIndex ->
-                            val character = characters[itemIndex]
+                        items(charactersFiltered.itemCount) { itemIndex ->
+                            val character = charactersFiltered[itemIndex]
                             if (character != null) {
                                 CharacterItem(
                                     item = character,
@@ -112,7 +99,7 @@ fun CharacterSearchScreen(
                             }
                         }
                         item {
-                            if (characters.loadState.append is LoadState.Loading) {
+                            if (charactersFiltered.loadState.append is LoadState.Loading) {
                                 CircularProgressIndicator()
                             }
                         }
@@ -121,4 +108,75 @@ fun CharacterSearchScreen(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StatusSelector(
+    modifier: Modifier = Modifier,
+    selection: Int = 0,
+    statusList: List<CharacterStatusFilter>,
+    onSelected: (status: CharacterStatusFilter) -> Unit
+) {
+    var selected by rememberSaveable { mutableStateOf(selection) }
+
+    LazyRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        items(statusList.size) { index ->
+            val status = statusList[index]
+            val isSelected = status == statusList[selected]
+
+            FilterChip(
+                selected = isSelected,
+                label = {
+                    Text(status.label)
+                },
+                leadingIcon = {
+                    if (isSelected) {
+                        Icon(Icons.Default.Check, contentDescription = null)
+                    }
+                },
+                onClick = {
+                    selected = index
+                    onSelected(statusList[index])
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun SearchInput(
+    onSearch: (String) -> Unit,
+) {
+    var text by rememberSaveable { mutableStateOf("") }
+    var active by rememberSaveable { mutableStateOf(false) }
+
+    TextField(
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        value = text,
+        onValueChange = { text = it },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
+        placeholder = { Text("Type a character name") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        trailingIcon = {
+            if (active) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        if (text.isNotEmpty()) {
+                            text = ""
+                        } else {
+                            active = false
+                        }
+                    },
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Close icon"
+                )
+            }
+        }
+    )
 }

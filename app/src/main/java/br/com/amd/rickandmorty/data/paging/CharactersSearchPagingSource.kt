@@ -27,7 +27,7 @@ class CharactersSearchPagingSource(
             val response = rickAndMortyApi.getCharacters(
                 page = nextPageNumber,
                 name = name,
-                status = null
+                status = status
             )
 
             val nextKey = if (response.info.next != null) {
