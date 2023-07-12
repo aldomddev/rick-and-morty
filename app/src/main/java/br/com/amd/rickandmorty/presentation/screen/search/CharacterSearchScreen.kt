@@ -78,7 +78,9 @@ fun CharacterSearchScreen(
 
                 is LoadState.Error -> {
                     Text(
-                        modifier = Modifier.padding(top = 24.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp),
                         text = "No matching characters found",
                         textAlign = TextAlign.Center
                     )
@@ -168,7 +170,9 @@ fun SearchInput(
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
-        placeholder = { Text(stringResource(id = R.string.characters_search_input_placeholder)) },
+        placeholder = {
+            Text(stringResource(id = R.string.characters_search_input_placeholder))
+        },
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -179,11 +183,8 @@ fun SearchInput(
             if (active) {
                 Icon(
                     modifier = Modifier.clickable {
-                        if (text.isNotEmpty()) {
-                            text = ""
-                        } else {
-                            active = false
-                        }
+                        text = ""
+                        active = false
                     },
                     imageVector = Icons.Default.Close,
                     contentDescription = stringResource(id = R.string.characters_search_icon_close_description)

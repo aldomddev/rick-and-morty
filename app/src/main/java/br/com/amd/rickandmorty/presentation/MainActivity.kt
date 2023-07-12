@@ -92,7 +92,7 @@ private fun NavigationIcon(
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Search"
+                contentDescription = stringResource(id = R.string.characters_search_title)
             )
         }
     }
