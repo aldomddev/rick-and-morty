@@ -1,4 +1,4 @@
-package br.com.amd.rickandmorty.presentation.screen
+package br.com.amd.rickandmorty.presentation.screen.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

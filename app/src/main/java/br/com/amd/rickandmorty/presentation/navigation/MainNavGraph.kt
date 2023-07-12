@@ -10,26 +10,26 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
-import br.com.amd.rickandmorty.presentation.MainViewModel
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
-import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsScreen
-import br.com.amd.rickandmorty.presentation.screen.CharacterDetailsViewModel
-import br.com.amd.rickandmorty.presentation.screen.CharacterListScreen
-import br.com.amd.rickandmorty.presentation.screen.CharacterSearchScreen
+import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsScreen
+import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsViewModel
+import br.com.amd.rickandmorty.presentation.screen.list.CharacterListScreen
+import br.com.amd.rickandmorty.presentation.screen.list.CharactersListViewModel
+import br.com.amd.rickandmorty.presentation.screen.search.CharacterSearchScreen
+import br.com.amd.rickandmorty.presentation.screen.search.CharacterSearchViewModel
 
 @Composable
 fun MainNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = hiltViewModel<MainViewModel>()
-
     NavHost(
         navController = navController,
         startDestination = Destination.CharacterListScreen.fullRoute
     ) {
         composable(route = Destination.CharacterListScreen.fullRoute) {
-            val items = viewModel.charactersListPagingData.collectAsLazyPagingItems()
+            val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
+            val items = charactersListViewModel.charactersListPagingData.collectAsLazyPagingItems()
 
             CharacterListScreen(
                 characters = items,
@@ -64,15 +64,16 @@ fun MainNavGraph(
         }
 
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
-            val items = viewModel.charactersSearchPagingData.collectAsLazyPagingItems()
+            val characterSearchViewModel = hiltViewModel<CharacterSearchViewModel>()
+            val items = characterSearchViewModel.charactersSearchPagingData.collectAsLazyPagingItems()
 
             val statusList = CharacterStatusFilter.values().toList()
             CharacterSearchScreen(
                 modifier = modifier,
                 statusList = statusList,
                 charactersFiltered = items,
-                onNameQueryChange = viewModel.onNameQueryChange,
-                onStatusQueryChange = viewModel.onStatusQueryChange,
+                onNameQueryChange = characterSearchViewModel.onNameQueryChange,
+                onStatusQueryChange = characterSearchViewModel.onStatusQueryChange,
                 navigateToDetails = { id ->
                     navController.navigate(Destination.CharacterDetailsScreen(id))
                 }

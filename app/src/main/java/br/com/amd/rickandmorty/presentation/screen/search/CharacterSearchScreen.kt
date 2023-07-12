@@ -1,4 +1,4 @@
-package br.com.amd.rickandmorty.presentation.screen
+package br.com.amd.rickandmorty.presentation.screen.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +35,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import br.com.amd.rickandmorty.domain.model.Character
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
+import br.com.amd.rickandmorty.presentation.screen.list.CharacterItem
 
 @Composable
 fun CharacterSearchScreen(

@@ -1,11 +1,9 @@
-package br.com.amd.rickandmorty.presentation
+package br.com.amd.rickandmorty.presentation.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
-import br.com.amd.rickandmorty.data.local.model.toCharacter
 import br.com.amd.rickandmorty.data.repository.RickAndMortyRepository
 import br.com.amd.rickandmorty.domain.model.Character
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
@@ -17,14 +15,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class CharacterSearchViewModel @Inject constructor(
     private val rickAndMortyRepository: RickAndMortyRepository
 ) : ViewModel() {
 
@@ -62,11 +59,4 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch { statusQueryFlow.emit(status) }
         }
     }
-
-    val charactersListPagingData = rickAndMortyRepository
-        .getCharactersListStream()
-        .map { pagingData ->
-            pagingData.map { characterEntity -> characterEntity.toCharacter() }
-        }
-        .cachedIn(viewModelScope)
 }

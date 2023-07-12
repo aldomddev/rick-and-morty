@@ -1,4 +1,4 @@
-package br.com.amd.rickandmorty.presentation.screen
+package br.com.amd.rickandmorty.presentation.screen.details
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

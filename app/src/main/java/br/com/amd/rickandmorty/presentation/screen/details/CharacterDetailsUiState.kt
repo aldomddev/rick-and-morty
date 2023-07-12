@@ -1,4 +1,4 @@
-package br.com.amd.rickandmorty.presentation.screen
+package br.com.amd.rickandmorty.presentation.screen.details
 
 import br.com.amd.rickandmorty.domain.model.Character
 
