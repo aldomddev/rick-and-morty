@@ -57,6 +57,12 @@ fun CharacterSearchScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             SearchInput(onSearch = { onNameQueryChange(it) })
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, top = 24.dp),
+                text = stringResource(id = R.string.characters_search_status_Label)
+            )
             StatusSelector(
                 statusList = statusList,
                 modifier = Modifier
