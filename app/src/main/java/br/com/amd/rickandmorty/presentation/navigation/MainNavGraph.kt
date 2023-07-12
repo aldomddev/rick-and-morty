@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,12 +21,13 @@ fun MainNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val viewModel = hiltViewModel<MainViewModel>()
+
     NavHost(
         navController = navController,
         startDestination = Destination.CharacterListScreen.fullRoute
     ) {
         composable(route = Destination.CharacterListScreen.fullRoute) {
-            val viewModel = hiltViewModel<MainViewModel>()
             val items = viewModel.charactersPagingData.collectAsLazyPagingItems()
 
             CharacterListScreen(
@@ -62,11 +62,7 @@ fun MainNavGraph(
         }
 
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
-            val viewModel = hiltViewModel<MainViewModel>()
-            //val items = viewModel.pagingDataFlow.collectAsLazyPagingItems()
             val items = viewModel.pagingDataFlow.collectAsLazyPagingItems()
-
-            println("AMDAMDAMD - ${items.itemCount}")
 
             CharacterSearchScreen(
                 modifier = modifier,

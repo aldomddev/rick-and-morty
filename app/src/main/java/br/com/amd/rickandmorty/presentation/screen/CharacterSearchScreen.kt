@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -40,10 +39,6 @@ fun CharacterSearchScreen(
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }
-    
-    AssistChip(onClick = { /*TODO*/ }) {
-        
-    }
 
     Box(
         modifier = modifier
@@ -125,65 +120,5 @@ fun CharacterSearchScreen(
                 }
             }
         }
-
-//        SearchBar(
-//            modifier = Modifier.fillMaxWidth(),
-//            query = text,
-//            onQueryChange = { query ->
-//                text = query
-//            },
-//            onSearch = { searchString ->
-//                active = false
-//                onSearch(searchString)
-//            },
-//            active = active,
-//            shape = SearchBarDefaults.dockedShape,
-//            onActiveChange = { active = it },
-//            placeholder = { Text("Hinted search text") },
-//            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-//            trailingIcon = {
-//                if (active) {
-//                    Icon(
-//                        modifier = Modifier.clickable {
-//                            if (text.isNotEmpty()) {
-//                                text = ""
-//                            } else {
-//                                active = false
-//                            }
-//                        },
-//                        imageVector = Icons.Default.Close,
-//                        contentDescription = "Close icon"
-//                    )
-//                }
-//            }
-//        ) {
-//            if (characters.loadState.refresh is LoadState.Loading) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier.align(Alignment.CenterHorizontally)
-//                )
-//            } else {
-//                LazyColumn(
-//                    modifier = Modifier.fillMaxSize(),
-//                    verticalArrangement = Arrangement.spacedBy(16.dp),
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    items(characters.itemCount) { itemIndex ->
-//                        val character = characters[itemIndex]
-//                        if (character != null) {
-//                            CharacterItem(
-//                                item = character,
-//                                modifier = Modifier.fillMaxWidth(),
-//                                onItemClick = navigateToDetails
-//                            )
-//                        }
-//                    }
-//                    item {
-//                        if (characters.loadState.append is LoadState.Loading) {
-//                            CircularProgressIndicator()
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 }
