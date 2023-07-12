@@ -31,7 +31,6 @@ class CharacterDetailsViewModel @Inject constructor(
                 .fold(
                     onSuccess = ::onGetCharacterDataSuccess,
                     onFailure = {
-                        println("$it")
                         onGetCharacterDataFailure()
                     }
                 )
