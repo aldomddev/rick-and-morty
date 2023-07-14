@@ -9,10 +9,14 @@ import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 
 @Dao
 interface CharactersDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(character: CharacterEntity)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(characters: List<CharacterEntity>)
 
-    @Query("SELECT * FROM characters")
+    @Query("SELECT * FROM characters ORDER BY id ASC")
     fun pagingSource(): PagingSource<Int, CharacterEntity>
 
     @Query("SELECT * FROM characters WHERE id LIKE :id")

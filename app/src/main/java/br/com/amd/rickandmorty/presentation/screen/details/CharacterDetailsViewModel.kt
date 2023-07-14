@@ -30,9 +30,7 @@ class CharacterDetailsViewModel @Inject constructor(
                 .getCharacterDetails(id)
                 .fold(
                     onSuccess = ::onGetCharacterDataSuccess,
-                    onFailure = {
-                        onGetCharacterDataFailure()
-                    }
+                    onFailure = { onGetCharacterDataFailure() }
                 )
         }
     }

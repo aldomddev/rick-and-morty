@@ -4,7 +4,9 @@ import br.com.amd.rickandmorty.BuildConfig
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.repository.RickAndMortyRepository
+import br.com.amd.rickandmorty.data.repository.RickAndMortyRepositoryImpl
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,11 +52,15 @@ object ServiceModule {
 
         return retrofit.create(RickAndMortyApi::class.java)
     }
+}
 
-    @Provides
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
     @Singleton
-    fun provideRickAndMortyRepository(
-        database: RickAndMortyDatabase,
-        api: RickAndMortyApi
-    ) = RickAndMortyRepository(api, database)
+    abstract fun bindRickAndMortyRepository(
+        repositoryImpl: RickAndMortyRepositoryImpl
+    ): RickAndMortyRepository
 }
