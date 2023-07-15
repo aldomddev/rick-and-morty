@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RickAndMortyRepository {
     suspend fun getCharacterDetails(id: Int): Result<Character>
-    fun getCharactersListStream(): Flow<PagingData<CharacterEntity>>
-    fun getSearchCharactersResultStream(
+    suspend fun getCharactersListStream(): Flow<PagingData<CharacterEntity>>
+    suspend fun getSearchCharactersResultStream(
         name: String? = null,
         status: String? = null
-    ): Flow<PagingData<Character>>
+    ): Flow<PagingData<CharacterEntity>>
 }

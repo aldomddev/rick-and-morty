@@ -22,10 +22,10 @@ object DatabaseModule {
             context,
             RickAndMortyDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton
     @Provides
-    fun provideCharactersDao(database: RickAndMortyDatabase) = database.getCharactersDao()
+    fun provideCharactersDao(database: RickAndMortyDatabase) = database.charactersDao()
 }

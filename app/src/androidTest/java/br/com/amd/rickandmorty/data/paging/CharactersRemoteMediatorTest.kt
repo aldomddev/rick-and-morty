@@ -38,15 +38,17 @@ class CharactersRemoteMediatorTest {
         ).build()
 
         fakeApi = RickAndMortyFakeApi()
-        userDao = db.getCharactersDao()
+        userDao = db.charactersDao()
     }
 
     @Test
     fun refreshLoadReturnsSuccessResultWhenMoreDataIsPresent() = runTest {
         fakeApi.init()
         val remoteMediator = CharactersRemoteMediator(
-            fakeApi,
-            db,
+            nameQuery = null,
+            statusQuery = null,
+            rickAndMortyApi = fakeApi,
+            rickAndMortyDb = db,
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(
@@ -64,8 +66,10 @@ class CharactersRemoteMediatorTest {
     @Test
     fun refreshLoadSuccessAndEndOfPaginationWhenNoMoreData() = runTest {
         val remoteMediator = CharactersRemoteMediator(
-            fakeApi,
-            db,
+            nameQuery = null,
+            statusQuery = null,
+            rickAndMortyApi = fakeApi,
+            rickAndMortyDb = db,
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(
@@ -87,8 +91,10 @@ class CharactersRemoteMediatorTest {
             throwOnNextCall = true
         }
         val remoteMediator = CharactersRemoteMediator(
-            fakeApi,
-            db,
+            nameQuery = null,
+            statusQuery = null,
+            rickAndMortyApi = fakeApi,
+            rickAndMortyDb = db,
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(
