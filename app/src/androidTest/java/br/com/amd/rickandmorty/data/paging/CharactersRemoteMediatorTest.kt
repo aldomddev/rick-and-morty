@@ -12,7 +12,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.local.database.dao.CharactersDao
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
-import br.com.amd.rickandmorty.data.paging.repository.RickAndMortyFakeApi
+import br.com.amd.rickandmorty.utils.RickAndMortyFakeApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertFalse
@@ -22,7 +23,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
-@OptIn(ExperimentalPagingApi::class)
+@OptIn(ExperimentalPagingApi::class, ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class CharactersRemoteMediatorTest {
 

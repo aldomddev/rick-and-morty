@@ -24,8 +24,4 @@ object DatabaseModule {
             DATABASE_NAME
         ).fallbackToDestructiveMigration().build()
     }
-
-    @Singleton
-    @Provides
-    fun provideCharactersDao(database: RickAndMortyDatabase) = database.charactersDao()
 }
