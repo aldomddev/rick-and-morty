@@ -1,8 +1,6 @@
 package br.com.amd.rickandmorty.presentation
 
 import androidx.paging.AsyncPagingDataDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListUpdateCallback
 import app.cash.turbine.test
 import br.com.amd.rickandmorty.data.repository.RickAndMortyFakeRepository
 import br.com.amd.rickandmorty.domain.model.Character
@@ -52,7 +50,7 @@ class CharactersListViewModelTest {
 
     @Test
     fun `list of characters should be emitted if there is data`() = runTest {
-        viewModel.charactersListPagingData.test {
+        viewModel.charactersSearchPagingData.test {
             val expectedData = helperCache
 
             val actualData = awaitItem()
@@ -64,7 +62,7 @@ class CharactersListViewModelTest {
 
     @Test
     fun `list should be updated when search by name returns data`() = runTest {
-        viewModel.charactersListPagingData.test {
+        viewModel.charactersSearchPagingData.test {
             val expectedData = listOf(CharacterFactory.create(id = 1, name = "Rick"))
 
             viewModel.onNameQueryChange("Rick")
@@ -78,7 +76,7 @@ class CharactersListViewModelTest {
 
     @Test
     fun `list should be updated when search by status returns data`() = runTest {
-        viewModel.charactersListPagingData.test {
+        viewModel.charactersSearchPagingData.test {
             val expectedData = helperCache
 
             viewModel.onStatusQueryChange(CharacterStatusFilter.ALIVE)

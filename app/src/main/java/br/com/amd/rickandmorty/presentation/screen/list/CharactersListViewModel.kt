@@ -2,6 +2,7 @@ package br.com.amd.rickandmorty.presentation.screen.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -34,12 +35,12 @@ class CharactersListViewModel @Inject constructor(
 
     val onNameQueryChange: (String) -> Unit
     val onStatusQueryChange: (CharacterStatusFilter) -> Unit
+    val charactersSearchPagingData: Flow<PagingData<Character>>
     val charactersListPagingData: Flow<PagingData<Character>>
 
     init {
         val nameQueryFlow = MutableSharedFlow<String>()
         val nameQuery = nameQueryFlow
-            .filterNot { it.isBlank() }
             .onStart { emit("") }
 
         val statusQueryFlow = MutableSharedFlow<CharacterStatusFilter>()
@@ -47,7 +48,7 @@ class CharactersListViewModel @Inject constructor(
             .distinctUntilChanged()
             .onStart { emit(CharacterStatusFilter.ALL) }
 
-        charactersListPagingData = combine(
+        charactersSearchPagingData = combine(
             nameQuery,
             statusQuery,
             ::Pair
@@ -69,5 +70,11 @@ class CharactersListViewModel @Inject constructor(
         onStatusQueryChange = { status ->
             viewModelScope.launch { statusQueryFlow.emit(status) }
         }
+
+        charactersListPagingData = rickAndMortyRepository.getCharactersListStream().map { pagingData ->
+            pagingData.map { characterEntity -> characterEntity.toCharacter() }
+        }
+        .flowOn(ioDispatcher)
+        .cachedIn(viewModelScope)
     }
 }

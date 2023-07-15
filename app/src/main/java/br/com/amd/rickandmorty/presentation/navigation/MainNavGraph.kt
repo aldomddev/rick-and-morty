@@ -22,14 +22,13 @@ fun MainNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
-    val items = charactersListViewModel.charactersListPagingData.collectAsLazyPagingItems()
-
     NavHost(
         navController = navController,
         startDestination = Destination.CharacterListScreen.fullRoute
     ) {
         composable(route = Destination.CharacterListScreen.fullRoute) {
+            val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
+            val items = charactersListViewModel.charactersListPagingData.collectAsLazyPagingItems()
             CharacterListScreen(
                 characters = items,
                 modifier = modifier,
@@ -42,7 +41,9 @@ fun MainNavGraph(
         composable(
             route = Destination.CharacterDetailsScreen.fullRoute,
             arguments = listOf(
-                navArgument(name = Destination.CharacterDetailsScreen.CHARACTER_ID_PARAM_KEY) {
+                navArgument(
+                    name = Destination.CharacterDetailsScreen.CHARACTER_ID_PARAM_KEY
+                ) {
                     type = NavType.IntType
                 }
             )
@@ -63,6 +64,8 @@ fun MainNavGraph(
         }
 
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
+            val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
+            val items = charactersListViewModel.charactersSearchPagingData.collectAsLazyPagingItems()
             val statusList = CharacterStatusFilter.values().toList()
             CharacterSearchScreen(
                 modifier = modifier,

@@ -16,13 +16,13 @@ class RickAndMortyFakeRepository : RickAndMortyRepository {
         }
     }
 
-    override suspend fun getCharactersListStream(): Flow<PagingData<CharacterEntity>> = flow {
+    override fun getCharactersListStream(): Flow<PagingData<CharacterEntity>> = flow {
         emit(PagingData.from(characters.toCharactersEntity()))
     }
 
     override suspend fun getSearchCharactersResultStream(
-        name: String?,
-        status: String?
+        name: String,
+        status: String
     ): Flow<PagingData<CharacterEntity>> = flow {
         val filteredItems = mutableListOf<Character>()
 

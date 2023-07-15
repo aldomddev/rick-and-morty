@@ -72,13 +72,10 @@ class CharactersRemoteMediator(
                 val prevKey = if (page == RickAndMortyApi.DEFAULT_FIRST_PAGE) null else page - 1
                 val nextKey = if (endOfPagination) null else page + 1
 
-
                 val characters = remotePageData.results.toCharactersEntity()
                 val keys = characters.map { character ->
                     CharacterKeyEntity(id = character.id, nextKey = nextKey, prevKey = prevKey)
                 }
-
-                println("AMD - inserting ${characters.size} chars")
 
                 rickAndMortyDb.charactersKeysDao().insertAll(keys)
                 rickAndMortyDb.charactersDao().insertAll(characters)

@@ -26,7 +26,7 @@ class RickAndMortyRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override suspend fun getCharactersListStream(): Flow<PagingData<CharacterEntity>> {
+    override fun getCharactersListStream(): Flow<PagingData<CharacterEntity>> {
         return Pager(
             config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = CharactersRemoteMediator(
@@ -41,17 +41,22 @@ class RickAndMortyRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override suspend fun getSearchCharactersResultStream(
-        name: String?,
-        status: String?
+        name: String,
+        status: String
     ): Flow<PagingData<CharacterEntity>> {
+        val nameQuery = "%${name.replace(' ', '%')}%"
+        val statusQuery = "%${status.replace(' ', '%')}%"
+
         return Pager(
             config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = CharactersRemoteMediator(
+                nameQuery = name,
+                statusQuery = status,
                 rickAndMortyDb = rickAndMortyDb,
                 rickAndMortyApi = rickAndMortyApi
             ),
             pagingSourceFactory = {
-                rickAndMortyDb.charactersDao().pagingSource()
+                rickAndMortyDb.charactersDao().charsByNameAndStatus(nameQuery, statusQuery)
             }
         ).flow
     }
