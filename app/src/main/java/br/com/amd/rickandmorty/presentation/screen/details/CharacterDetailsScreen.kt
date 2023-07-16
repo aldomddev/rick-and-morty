@@ -29,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.amd.rickandmorty.R
 import br.com.amd.rickandmorty.domain.model.Character
@@ -233,4 +232,3 @@ private fun getCharacterStatusColor(status: String): Color {
 private fun ErrorState() {
     Text(text = stringResource(id = R.string.characters_details_error_message))
 }
-

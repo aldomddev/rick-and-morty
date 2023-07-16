@@ -9,7 +9,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsScreen
 import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsViewModel

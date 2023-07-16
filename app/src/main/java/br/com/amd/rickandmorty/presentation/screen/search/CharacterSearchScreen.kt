@@ -166,7 +166,8 @@ fun StatusSelector(
                     if (isSelected) {
                         Icon(
                             modifier = Modifier.testTag("$STATUS_ITEM_ICON$index"),
-                            imageVector = Icons.Default.Check, contentDescription = null
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null
                         )
                     }
                 },
