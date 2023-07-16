@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Rick and Morty</string>
+    <string name="characters_list_title">Characters</string>
+    <string name="characters_search_title">Search</string>
+    <string name="characters_details_title">More Info</string>
+    <string name="characters_details_error_message">Sorry!</string>
+    <string name="characters_search_input_placeholder">"Type a character name"</string>
+    <string name="characters_search_status_Label">"Choose a status"</string>
+    <string name="characters_search_icon_search_description">"Search"</string>
+    <string name="characters_search_icon_close_description">"Close"</string>
+</resources>
