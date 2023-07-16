@@ -27,8 +27,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import br.com.amd.rickandmorty.R
 import br.com.amd.rickandmorty.domain.model.Character
+import br.com.amd.rickandmorty.presentation.TestTags.LOADING
 import coil.compose.AsyncImage
 
 @Composable
@@ -50,9 +55,12 @@ fun CharacterDetailsScreen(
         when (uiState) {
             CharacterDetailsUiState.Loading -> {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .testTag(LOADING)
                 )
             }
+
             is CharacterDetailsUiState.Success -> SuccessState(character = uiState.data)
             CharacterDetailsUiState.Error -> ErrorState()
         }
@@ -223,5 +231,6 @@ private fun getCharacterStatusColor(status: String): Color {
 
 @Composable
 private fun ErrorState() {
-    Text(text = "Ooops!!!!")
+    Text(text = stringResource(id = R.string.characters_details_error_message))
 }
+
