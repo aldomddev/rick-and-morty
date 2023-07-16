@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import br.com.amd.rickandmorty.domain.model.Character
-import kotlinx.serialization.Serializable
 
 @Entity(tableName = "characters")
 data class CharacterEntity(

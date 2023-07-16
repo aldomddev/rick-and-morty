@@ -7,7 +7,7 @@ import coil.disk.DiskCache
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class RickAndMortyApp: Application(), ImageLoaderFactory {
+class RickAndMortyApp : Application(), ImageLoaderFactory {
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .crossfade(true)

@@ -29,9 +29,7 @@ class CharactersRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, CharacterEntity>
     ): MediatorResult {
-
         val page = when (loadType) {
-
             LoadType.REFRESH -> {
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(RickAndMortyApi.PAGE_SIZE)
@@ -82,7 +80,6 @@ class CharactersRemoteMediator(
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPagination)
-
         } catch (exception: IOException) {
             return MediatorResult.Error(exception)
         } catch (exception: HttpException) {

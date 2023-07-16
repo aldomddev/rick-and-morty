@@ -23,8 +23,7 @@ interface CharactersDao {
     suspend fun charById(id: Int): CharacterEntity?
 
     @Query(
-        "SELECT * FROM characters WHERE " +
-        "name LIKE :name AND status LIKE :status"
+        "SELECT * FROM characters WHERE name LIKE :name AND status LIKE :status"
     )
     fun charsByNameAndStatus(
         name: String,

@@ -161,7 +161,7 @@ fun StatusSelector(
 
 @Composable
 fun SearchInput(
-    onSearch: (String) -> Unit,
+    onSearch: (String) -> Unit
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     var active by rememberSaveable { mutableStateOf(false) }

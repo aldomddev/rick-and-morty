@@ -1,7 +1,6 @@
 package br.com.amd.rickandmorty.di
 
 import br.com.amd.rickandmorty.BuildConfig
-import br.com.amd.rickandmorty.data.local.database.RickAndMortyDatabase
 import br.com.amd.rickandmorty.data.remote.api.RickAndMortyApi
 import br.com.amd.rickandmorty.data.repository.RickAndMortyRepository
 import br.com.amd.rickandmorty.data.repository.RickAndMortyRepositoryImpl

@@ -23,14 +23,13 @@ class CharactersListViewModelTest {
     val dispatcherRule = MainDispatcherRule()
 
     private val helperCache = listOf(
-        CharacterFactory.create(id = 1, name = "Rick", status ="Alive"),
-        CharacterFactory.create(id = 2, name = "Morty", status ="Alive")
+        CharacterFactory.create(id = 1, name = "Rick", status = "Alive"),
+        CharacterFactory.create(id = 2, name = "Morty", status = "Alive")
     )
 
     private val rickAndMortyRepository = RickAndMortyFakeRepository()
     private lateinit var differHelper: AsyncPagingDataDiffer<Character>
     private lateinit var viewModel: CharactersListViewModel
-
 
     @Before
     fun setup() {

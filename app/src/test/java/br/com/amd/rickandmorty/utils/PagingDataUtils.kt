@@ -15,4 +15,3 @@ class ListUpdateTestCallback : ListUpdateCallback {
     override fun onMoved(fromPosition: Int, toPosition: Int) = Unit
     override fun onChanged(position: Int, count: Int, payload: Any?) = Unit
 }
-

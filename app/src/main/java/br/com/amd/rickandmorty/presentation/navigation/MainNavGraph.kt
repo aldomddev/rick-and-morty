@@ -14,8 +14,8 @@ import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsScreen
 import br.com.amd.rickandmorty.presentation.screen.details.CharacterDetailsViewModel
 import br.com.amd.rickandmorty.presentation.screen.list.CharacterListScreen
-import br.com.amd.rickandmorty.presentation.screen.search.CharacterSearchScreen
 import br.com.amd.rickandmorty.presentation.screen.list.CharactersListViewModel
+import br.com.amd.rickandmorty.presentation.screen.search.CharacterSearchScreen
 
 @Composable
 fun MainNavGraph(
@@ -65,7 +65,8 @@ fun MainNavGraph(
 
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
             val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
-            val items = charactersListViewModel.charactersSearchPagingData.collectAsLazyPagingItems()
+            val items =
+                charactersListViewModel.charactersSearchPagingData.collectAsLazyPagingItems()
             val statusList = CharacterStatusFilter.values().toList()
             CharacterSearchScreen(
                 modifier = modifier,

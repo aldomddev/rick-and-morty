@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface RickAndMortyApi {
     @GET("character/")
     suspend fun getCharacters(
@@ -23,6 +22,7 @@ interface RickAndMortyApi {
     companion object {
         const val BASE_API = "https://rickandmortyapi.com/api/"
         const val DEFAULT_FIRST_PAGE = 1
+
         // for page size, see https://rickandmortyapi.com/documentation/#info-and-pagination
         const val PAGE_SIZE = 20
     }

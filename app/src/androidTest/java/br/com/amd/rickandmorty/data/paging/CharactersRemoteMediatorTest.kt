@@ -35,10 +35,11 @@ class CharactersRemoteMediatorTest {
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, RickAndMortyDatabase::class.java
+            context,
+            RickAndMortyDatabase::class.java
         ).build()
 
-        fakeApi = RickAndMortyFakeApi()
+        fakeApi = RickAndMortyFakeApi(context)
         userDao = db.charactersDao()
     }
 
@@ -49,7 +50,7 @@ class CharactersRemoteMediatorTest {
             nameQuery = null,
             statusQuery = null,
             rickAndMortyApi = fakeApi,
-            rickAndMortyDb = db,
+            rickAndMortyDb = db
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(
@@ -70,7 +71,7 @@ class CharactersRemoteMediatorTest {
             nameQuery = null,
             statusQuery = null,
             rickAndMortyApi = fakeApi,
-            rickAndMortyDb = db,
+            rickAndMortyDb = db
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(
@@ -95,7 +96,7 @@ class CharactersRemoteMediatorTest {
             nameQuery = null,
             statusQuery = null,
             rickAndMortyApi = fakeApi,
-            rickAndMortyDb = db,
+            rickAndMortyDb = db
         )
 
         val pagingState = PagingState<Int, CharacterEntity>(

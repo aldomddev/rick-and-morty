@@ -41,4 +41,3 @@ class RickAndMortyFakeRepository : RickAndMortyRepository {
         emit(PagingData.from(filteredItems.toCharactersEntity()))
     }
 }
-

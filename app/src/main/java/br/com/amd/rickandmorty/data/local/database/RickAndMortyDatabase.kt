@@ -2,8 +2,8 @@ package br.com.amd.rickandmorty.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import br.com.amd.rickandmorty.data.local.database.dao.CharactersKeysDao
 import br.com.amd.rickandmorty.data.local.database.dao.CharactersDao
+import br.com.amd.rickandmorty.data.local.database.dao.CharactersKeysDao
 import br.com.amd.rickandmorty.data.local.model.CharacterEntity
 import br.com.amd.rickandmorty.data.local.model.CharacterKeyEntity
 
@@ -12,7 +12,7 @@ import br.com.amd.rickandmorty.data.local.model.CharacterKeyEntity
     exportSchema = true,
     version = 1
 )
-abstract class RickAndMortyDatabase: RoomDatabase() {
+abstract class RickAndMortyDatabase : RoomDatabase() {
     abstract fun charactersKeysDao(): CharactersKeysDao
     abstract fun charactersDao(): CharactersDao
 

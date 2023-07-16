@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
     id("kotlin-kapt")
+    id("org.jmailen.kotlinter")
 }
 
 android {

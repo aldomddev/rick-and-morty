@@ -2,7 +2,6 @@ package br.com.amd.rickandmorty.presentation.screen.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -60,8 +58,8 @@ class CharactersListViewModel @Inject constructor(
                 pagingData.map { characterEntity -> characterEntity.toCharacter() }
             }
         }
-        .flowOn(ioDispatcher)
-        .cachedIn(viewModelScope)
+            .flowOn(ioDispatcher)
+            .cachedIn(viewModelScope)
 
         onNameQueryChange = { name ->
             viewModelScope.launch { nameQueryFlow.emit(name) }
@@ -71,10 +69,11 @@ class CharactersListViewModel @Inject constructor(
             viewModelScope.launch { statusQueryFlow.emit(status) }
         }
 
-        charactersListPagingData = rickAndMortyRepository.getCharactersListStream().map { pagingData ->
-            pagingData.map { characterEntity -> characterEntity.toCharacter() }
-        }
-        .flowOn(ioDispatcher)
-        .cachedIn(viewModelScope)
+        charactersListPagingData =
+            rickAndMortyRepository.getCharactersListStream().map { pagingData ->
+                pagingData.map { characterEntity -> characterEntity.toCharacter() }
+            }
+                .flowOn(ioDispatcher)
+                .cachedIn(viewModelScope)
     }
 }
