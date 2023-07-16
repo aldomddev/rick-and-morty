@@ -58,8 +58,6 @@ fun CharacterSearchScreen(
     onStatusQueryChange: (CharacterStatusFilter) -> Unit,
     navigateToDetails: (id: Int) -> Unit
 ) {
-    val charactersFiltered = streamOfCharacters.collectAsLazyPagingItems()
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -69,12 +67,7 @@ fun CharacterSearchScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             SearchInput(onSearch = { onNameQueryChange(it) })
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 4.dp, top = 24.dp),
-                text = stringResource(id = R.string.characters_search_status_Label)
-            )
+
             StatusSelector(
                 statusList = statusList,
                 modifier = Modifier
@@ -85,96 +78,9 @@ fun CharacterSearchScreen(
                 }
             )
 
-            when (charactersFiltered.loadState.refresh) {
-                is LoadState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(top = 24.dp)
-                            .align(alignment = Alignment.CenterHorizontally)
-                    )
-                }
-
-                is LoadState.Error -> {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 24.dp),
-                        text = "No matching characters found",
-                        textAlign = TextAlign.Center
-                    )
-                }
-
-                else -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 16.dp)
-                            .testTag(CHARACTERS_LIST),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(charactersFiltered.itemCount) { itemIndex ->
-                            val character = charactersFiltered[itemIndex]
-                            if (character != null) {
-                                CharacterItem(
-                                    item = character,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    onItemClick = navigateToDetails
-                                )
-                            }
-                        }
-                        item {
-                            if (charactersFiltered.loadState.append is LoadState.Loading) {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun StatusSelector(
-    modifier: Modifier = Modifier,
-    selection: Int = 0,
-    statusList: List<CharacterStatusFilter>,
-    onSelected: (status: CharacterStatusFilter) -> Unit
-) {
-    var selected by rememberSaveable { mutableStateOf(selection) }
-
-    LazyRow(
-        modifier = modifier.testTag(STATUS_SELECTOR),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        items(statusList.size) { index ->
-            val status = statusList[index]
-            val isSelected = status == statusList[selected]
-
-            FilterChip(
-                modifier = Modifier.testTag("$STATUS_ITEM$index"),
-                selected = isSelected,
-                label = {
-                    Text(
-                        modifier = Modifier.testTag("$STATUS_ITEM_TEXT$index"),
-                        text = status.label
-                    )
-                },
-                leadingIcon = {
-                    if (isSelected) {
-                        Icon(
-                            modifier = Modifier.testTag("$STATUS_ITEM_ICON$index"),
-                            imageVector = Icons.Default.Check,
-                            contentDescription = null
-                        )
-                    }
-                },
-                onClick = {
-                    selected = index
-                    onSelected(statusList[index])
-                }
+            FilteredContent(
+                streamOfCharacters = streamOfCharacters,
+                navigateToDetails = navigateToDetails
             )
         }
     }
@@ -225,3 +131,114 @@ fun SearchInput(
         }
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StatusSelector(
+    modifier: Modifier = Modifier,
+    selection: Int = 0,
+    statusList: List<CharacterStatusFilter>,
+    onSelected: (status: CharacterStatusFilter) -> Unit
+) {
+    var selected by rememberSaveable { mutableStateOf(selection) }
+
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, top = 24.dp),
+        text = stringResource(id = R.string.characters_search_status_Label)
+    )
+
+    LazyRow(
+        modifier = modifier.testTag(STATUS_SELECTOR),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        items(statusList.size) { index ->
+            val status = statusList[index]
+            val isSelected = status == statusList[selected]
+
+            FilterChip(
+                modifier = Modifier.testTag("$STATUS_ITEM$index"),
+                selected = isSelected,
+                label = {
+                    Text(
+                        modifier = Modifier.testTag("$STATUS_ITEM_TEXT$index"),
+                        text = status.label
+                    )
+                },
+                leadingIcon = {
+                    if (isSelected) {
+                        Icon(
+                            modifier = Modifier.testTag("$STATUS_ITEM_ICON$index"),
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null
+                        )
+                    }
+                },
+                onClick = {
+                    selected = index
+                    onSelected(statusList[index])
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun FilteredContent(
+    streamOfCharacters: Flow<PagingData<Character>>,
+    navigateToDetails: (id: Int) -> Unit
+) {
+    val charactersFiltered = streamOfCharacters.collectAsLazyPagingItems()
+
+    if (charactersFiltered.loadState.refresh is LoadState.Loading) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
+        }
+    }
+
+    if (
+        charactersFiltered.loadState.refresh is LoadState.Error &&
+        charactersFiltered.itemCount == 0
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 24.dp),
+            text = "No matching characters found",
+            textAlign = TextAlign.Center
+        )
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .testTag(CHARACTERS_LIST),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(charactersFiltered.itemCount) { itemIndex ->
+                val character = charactersFiltered[itemIndex]
+                if (character != null) {
+                    CharacterItem(
+                        item = character,
+                        modifier = Modifier.fillMaxWidth(),
+                        onItemClick = navigateToDetails
+                    )
+                }
+            }
+            item {
+                if (charactersFiltered.loadState.append is LoadState.Loading) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
+}
+
