@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
@@ -28,6 +29,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import br.com.amd.rickandmorty.R
+import br.com.amd.rickandmorty.presentation.TestTags.NAVIGATION_ICON
+import br.com.amd.rickandmorty.presentation.TestTags.SEARCH_ICON
+import br.com.amd.rickandmorty.presentation.TestTags.TOP_BAR_TITLE
 import br.com.amd.rickandmorty.presentation.navigation.Destination
 import br.com.amd.rickandmorty.presentation.navigation.MainNavGraph
 import br.com.amd.rickandmorty.ui.theme.RickAndMortyTheme
@@ -92,6 +96,7 @@ private fun NavigationIcon(
 ) {
     if (!destination.isCurrentDestination(Destination.CharacterListScreen)) {
         IconButton(
+            modifier = Modifier.testTag(NAVIGATION_ICON),
             onClick = {
                 navController.navigateUp()
             }
@@ -111,6 +116,7 @@ private fun SearchIcon(
 ) {
     if (!destination.isCurrentDestination(Destination.CharacterSearchScreen)) {
         IconButton(
+            modifier = Modifier.testTag(SEARCH_ICON),
             onClick = {
                 navController.navigate(Destination.CharacterSearchScreen.fullRoute)
             }
@@ -125,7 +131,10 @@ private fun SearchIcon(
 
 @Composable
 private fun TopAppBarTitle(destination: State<NavBackStackEntry?>) {
-    Text(stringResource(id = destination.getTopBarTitle()))
+    Text(
+        text = stringResource(id = destination.getTopBarTitle()),
+        modifier = Modifier.testTag(TOP_BAR_TITLE)
+    )
 }
 
 private fun State<NavBackStackEntry?>.isCurrentDestination(destination: Destination): Boolean {

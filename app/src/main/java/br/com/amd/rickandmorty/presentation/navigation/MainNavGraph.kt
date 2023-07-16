@@ -28,9 +28,9 @@ fun MainNavGraph(
     ) {
         composable(route = Destination.CharacterListScreen.fullRoute) {
             val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
-            val items = charactersListViewModel.charactersListPagingData.collectAsLazyPagingItems()
+            val items = charactersListViewModel.charactersListPagingData
             CharacterListScreen(
-                characters = items,
+                streamOfCharacters = items,
                 modifier = modifier,
                 navigateToDetails = { id ->
                     navController.navigate(Destination.CharacterDetailsScreen(id))
@@ -66,12 +66,12 @@ fun MainNavGraph(
         composable(route = Destination.CharacterSearchScreen.fullRoute) {
             val charactersListViewModel = hiltViewModel<CharactersListViewModel>()
             val items =
-                charactersListViewModel.charactersSearchPagingData.collectAsLazyPagingItems()
+                charactersListViewModel.charactersSearchPagingData
             val statusList = CharacterStatusFilter.values().toList()
             CharacterSearchScreen(
                 modifier = modifier,
                 statusList = statusList,
-                charactersFiltered = items,
+                streamOfCharacters = items,
                 onNameQueryChange = charactersListViewModel.onNameQueryChange,
                 onStatusQueryChange = charactersListViewModel.onStatusQueryChange,
                 navigateToDetails = { id ->

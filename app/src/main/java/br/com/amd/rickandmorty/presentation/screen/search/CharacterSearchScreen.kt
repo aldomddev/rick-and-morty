@@ -28,26 +28,38 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.amd.rickandmorty.R
 import br.com.amd.rickandmorty.domain.model.Character
+import br.com.amd.rickandmorty.presentation.TestTags.CHARACTERS_LIST
+import br.com.amd.rickandmorty.presentation.TestTags.SEARCH_INPUT
+import br.com.amd.rickandmorty.presentation.TestTags.SEARCH_INPUT_PLACEHOLDER
+import br.com.amd.rickandmorty.presentation.TestTags.STATUS_ITEM
+import br.com.amd.rickandmorty.presentation.TestTags.STATUS_ITEM_ICON
+import br.com.amd.rickandmorty.presentation.TestTags.STATUS_ITEM_TEXT
+import br.com.amd.rickandmorty.presentation.TestTags.STATUS_SELECTOR
 import br.com.amd.rickandmorty.presentation.model.CharacterStatusFilter
 import br.com.amd.rickandmorty.presentation.screen.list.CharacterItem
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun CharacterSearchScreen(
     modifier: Modifier = Modifier,
     statusList: List<CharacterStatusFilter>,
-    charactersFiltered: LazyPagingItems<Character>,
+    streamOfCharacters: Flow<PagingData<Character>>,
     onNameQueryChange: (String) -> Unit,
     onStatusQueryChange: (CharacterStatusFilter) -> Unit,
     navigateToDetails: (id: Int) -> Unit
 ) {
+    val charactersFiltered = streamOfCharacters.collectAsLazyPagingItems()
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -96,7 +108,8 @@ fun CharacterSearchScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 16.dp),
+                            .padding(top = 16.dp)
+                            .testTag(CHARACTERS_LIST),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -133,7 +146,7 @@ fun StatusSelector(
     var selected by rememberSaveable { mutableStateOf(selection) }
 
     LazyRow(
-        modifier = modifier,
+        modifier = modifier.testTag(STATUS_SELECTOR),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         items(statusList.size) { index ->
@@ -141,13 +154,20 @@ fun StatusSelector(
             val isSelected = status == statusList[selected]
 
             FilterChip(
+                modifier = Modifier.testTag("$STATUS_ITEM$index"),
                 selected = isSelected,
                 label = {
-                    Text(status.label)
+                    Text(
+                        modifier = Modifier.testTag("$STATUS_ITEM_TEXT$index"),
+                        text = status.label
+                    )
                 },
                 leadingIcon = {
                     if (isSelected) {
-                        Icon(Icons.Default.Check, contentDescription = null)
+                        Icon(
+                            modifier = Modifier.testTag("$STATUS_ITEM_ICON$index"),
+                            imageVector = Icons.Default.Check, contentDescription = null
+                        )
                     }
                 },
                 onClick = {
@@ -167,7 +187,9 @@ fun SearchInput(
     var active by rememberSaveable { mutableStateOf(false) }
 
     TextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(SEARCH_INPUT),
         singleLine = true,
         value = text,
         onValueChange = { newText ->
@@ -177,7 +199,10 @@ fun SearchInput(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         keyboardActions = KeyboardActions(onSearch = { onSearch(text) }),
         placeholder = {
-            Text(stringResource(id = R.string.characters_search_input_placeholder))
+            Text(
+                modifier = Modifier.testTag(SEARCH_INPUT_PLACEHOLDER),
+                text = stringResource(id = R.string.characters_search_input_placeholder)
+            )
         },
         leadingIcon = {
             Icon(

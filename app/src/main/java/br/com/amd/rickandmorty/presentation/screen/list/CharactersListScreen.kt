@@ -20,20 +20,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import br.com.amd.rickandmorty.domain.model.Character
+import br.com.amd.rickandmorty.presentation.TestTags.CHARACTERS_LIST
+import br.com.amd.rickandmorty.presentation.TestTags.LOADING
 import br.com.amd.rickandmorty.ui.theme.RickAndMortyTheme
 import coil.compose.AsyncImage
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun CharacterListScreen(
-    characters: LazyPagingItems<Character>,
     modifier: Modifier = Modifier,
+    streamOfCharacters: Flow<PagingData<Character>>,
     navigateToDetails: (id: Int) -> Unit
 ) {
+    val characters = streamOfCharacters.collectAsLazyPagingItems()
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -41,11 +48,15 @@ fun CharacterListScreen(
     ) {
         if (characters.loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .testTag(LOADING)
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag(CHARACTERS_LIST),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
