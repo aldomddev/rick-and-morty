@@ -74,7 +74,3 @@ Ao rotacionar a tela, a disposição das informações é alterada, para melhor 
 - Para a paginação dos dados foi utilizada a biblioteca [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview), através da implementação de um `RemoteMediator` que realiza uma integração fluida com a biblioteca [Room](https://developer.android.com/jetpack/androidx/releases/room) deixando transparente para os consumidores o fluxo de dados que automaticamente retorna somente do cache local (banco de dados) caso haja falta de conexão à internet. 
 
 - Este projeto não possui use cases, o view model consome o flow diretamente do repositório. O motivo foi o fato do stream de dados conter a classe `PagingData`, parte da biblioteca Paging 3. Se considerarmos que a camada de domínio somente contém classes Kotlin puras, sem conhecimento de outras bibliotecas, aqui do framework Android, adicionar um use case entre a camada de dados (repositório) e de apresentação (view model), seria uma "violação" deste princípio já que o use case teria conhecimento da classse `PagingData`, adicionando uma dependência.
-
-## Bugs conhecidos
-
-- Ao realizar uma busca e retornar para a tela de listagem principal, o resultado da busca aparece na listagem. Este comportamento foi verificado em modo _on-line_, não ocorrento em modo _off-line_
